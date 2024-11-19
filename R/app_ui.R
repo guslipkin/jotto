@@ -33,7 +33,7 @@ app_ui <- function(request) {
         shinyWidgets::materialSwitch('dark_mode', label = 'Dark Mode', value = TRUE)
       ),
       bslib::layout_columns(
-        col_widths = c(3, 9),
+        col_widths = c(4, 8),
         bslib::card(
           bslib::card_body(
             shinyWidgets::textInputIcon('guess', label = NULL, placeholder = 'Guess'),
