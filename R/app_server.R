@@ -66,7 +66,7 @@ app_server <- function(input, output, session) {
     shiny::bindEvent(input$help, ignoreNULL = TRUE)
 
   shiny::observe({
-    guess <- input$guess
+    guess <- input$guess |> tolower()
     if (!.check_word(guess) && !(guess %in% c('history', 'help', 'exit', ''))) {
       shiny::showNotification(
         ui = 'Please choose a word that is five letters, has no repeated letters, and is not a proper noun',
