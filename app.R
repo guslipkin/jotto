@@ -3,5 +3,5 @@
 # Or use the blue button on top of this file
 
 pkgload::load_all(export_all = FALSE,helpers = FALSE,attach_testthat = FALSE)
-options("golem.app.prod" = TRUE, "shiny.sessionTimeout" = 0)
+options("golem.app.prod" = TRUE, "shiny.sessionTimeout" = 0, "shiny.autoreload" = FALSE)
 jotto::run_app() # add parameters here (if any)
