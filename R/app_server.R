@@ -29,11 +29,15 @@ app_server <- function(input, output, session) {
     shinyWidgets::show_alert(
       title = 'Credits',
       text = htmltools::HTML(
+        '<div style="text-align: justify">',
         'This was R Shiny application was written by and is hosted by <a href="https://guslipkin.me">Gus Lipkin</a>.',
         '<br>',
-        'The word list comes from <a href="http://wordlist.aspell.net/">SCOWL</a>.'
+        'The word list comes from <a href="http://wordlist.aspell.net/">SCOWL</a>.',
+        '</div>'
       ),
-      html = TRUE
+      html = TRUE,
+      type = 'info',
+      width = '80%'
     )
   }) |>
     shiny::bindEvent(input$credits)
@@ -58,7 +62,7 @@ app_server <- function(input, output, session) {
     shinyWidgets::show_alert(
       title = 'Help',
       text = htmltools::HTML(paste(
-        '<div style="text-align: left;">',
+        '<div style="text-align: justify;">',
         'Jotto is a game where you try to guess the five letter word.',
         '<ul>',
         '<li>The word will have no repeating letters</li>',
@@ -71,8 +75,7 @@ app_server <- function(input, output, session) {
         sep = ''
       )),
       html = TRUE,
-      type = 'info',
-      width = '80%'
+      type = 'info'
     )
   }) |>
     shiny::bindEvent(input$help, ignoreNULL = TRUE)
