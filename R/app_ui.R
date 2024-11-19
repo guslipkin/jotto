@@ -13,7 +13,7 @@ app_ui <- function(request) {
       title = 'Jotto',
       theme = bslib::bs_theme(bootswatch = 'darkly'),
       sidebar = bslib::sidebar(
-        open = FALSE,
+        open = 'desktop',
         shiny::actionButton('new_game', label = 'New Game'),
         shiny::actionButton('give_up', label = 'Give Up'),
         shiny::actionButton('help', label = 'Help'),
