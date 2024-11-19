@@ -1,22 +1,30 @@
 .make_word_list <- function() {
   # download the word list from http://wordlist.aspell.net/
   # unzip to the jotto/scowl
+  # git2r::clone('https://github.com/en-wl/wordlist.git', 'scowl')
+  # system(paste('cd ', getwd(), '/scowl && ./scowl word-list --size 80 > wl.txt', sep = ''))
   word_list <-
     'scowl/final' |>
     list.files(pattern = 'words', full.names = TRUE) |>
-    purrr::map(\(f) {
-      f <- f |> readLines() |> iconv(to = 'UTF-8') |> tolower()
+    tibble::tibble() |>
+    `colnames<-`('file') |>
+    dplyr::mutate(
+      'difficulty' = .data$file |> stringi::stri_extract(regex = '\\d{2}') |> as.integer()
+    ) |>
+    purrr::pmap(\(file, difficulty) {
+      f <- file |> readLines() |> iconv(to = 'UTF-8') |> tolower()
       f <- f[nchar(f) == 5]
       f <- f[grepl('\\w{5}', f)]
       f <- f[.check_word_duplicate_chars(f)]
-      return(f)
+      tibble::tibble('word' = f, 'difficulty' = difficulty)
     }, .progress = TRUE) |>
-    unlist() |>
-    sort()
+    purrr::list_rbind() |>
+    dplyr::arrange(.data$difficulty, .data$word) |>
+    dplyr::distinct()
   usethis::use_data(word_list, internal = TRUE, overwrite = TRUE)
 }
 
-.check_word_dictionary <- function(word) { word %in% word_list }
+.check_word_dictionary <- function(word) { word %in% word_list$word }
 
 .check_word_length <- function(word) { nchar(word) == 5 }
 
@@ -26,15 +34,23 @@
   .check_word_length(word) & .check_word_duplicate_chars(word) & .check_word_dictionary(word)
 }
 
-.pick_word <- function() {
-  shiny::showNotification(ui = 'Selecting a word', id = 'selecting_word')
+.pick_word <- function(difficulty) {
+  shinyWidgets::show_toast(
+    title = 'Selecting a word',
+    type = 'info',
+    position = 'top-end'
+  )
+  difficulty_list <-
+    word_list |>
+    dplyr::filter(.data$difficulty <= .env$difficulty) |>
+    dplyr::pull(.data$word)
   repeat {
-    word <- sample(word_list, 1)
+    word <- sample(difficulty_list, 1)
     if (.check_word(word)) {
-      shiny::removeNotification(id = 'selecting_word')
-      shiny::showNotification(
-        ui = 'Your word has been selected',
-        type = 'message'
+      shinyWidgets::show_toast(
+        title = 'Your word has been selected',
+        type = 'info',
+        position = 'top-end'
       )
       return(word)
     }
@@ -71,9 +87,10 @@
     )
 }
 
-.reset_game <- function(word, history) {
-  word(.pick_word())
+.reset_game <- function(word, history, difficulty) {
+  word(.pick_word(difficulty))
   history(.create_history())
   shinyWidgets::updateTextInputIcon(inputId = 'guess', value = NA_character_)
   shinyWidgets::updateCheckboxGroupButtons(inputId = 'letters', selected = '')
+  shinyWidgets::updateCheckboxGroupButtons(inputId = 'scratch', selected = '')
 }

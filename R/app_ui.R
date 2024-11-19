@@ -14,6 +14,18 @@ app_ui <- function(request) {
       theme = bslib::bs_theme(bootswatch = 'darkly'),
       sidebar = bslib::sidebar(
         open = 'desktop',
+        shiny::selectInput(
+          'difficulty',
+          label = 'Difficulty',
+          choices = c(
+            'Easy' = 35,
+            'Medium' = 50,
+            'Hard' = 70,
+            'Scrabble' = 80,
+            '🤷' = 95
+          ),
+          selected = 80
+        ),
         shiny::actionButton('new_game', label = 'New Game'),
         shiny::actionButton('give_up', label = 'Give Up'),
         shiny::actionButton('help', label = 'Help'),
@@ -34,6 +46,13 @@ app_ui <- function(request) {
                 justified = TRUE,
                 size = 'sm'
               )
+            ),
+            shinyWidgets::checkboxGroupButtons(
+              inputId = 'scratch',
+              label = 'Scratch',
+              choices = letters,
+              justified = TRUE,
+              size = 'sm'
             )
           )
         ),
@@ -67,12 +86,12 @@ golem_add_external_resources <- function() {
     ),
     htmltools::tags$style('* { font-family: "Courier"};'),
     htmltools::tags$style("
-      #letters .btn-group-container-sw {
+      .btn-group-container-sw {
         display: flex;
         flex-wrap: wrap;
         gap: 5px; /* Optional: adds space between buttons */
       }
-      #letters .btn-group-container-sw .btn {
+      .btn-group-container-sw .btn {
         flex: 1 1 auto; /* Allows buttons to resize flexibly */
         max-width: 150px; /* Optional: set a maximum width for buttons */
         border-radius: 0 !important; /* Removes rounded corners */
