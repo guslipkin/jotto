@@ -17,6 +17,7 @@ app_ui <- function(request) {
         shiny::actionButton('new_game', label = 'New Game'),
         shiny::actionButton('give_up', label = 'Give Up'),
         shiny::actionButton('help', label = 'Help'),
+        shiny::actionButton('credits', label = 'Credits'),
         shinyWidgets::materialSwitch('dark_mode', label = 'Dark Mode', value = TRUE)
       ),
       bslib::layout_columns(

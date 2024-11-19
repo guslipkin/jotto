@@ -9,13 +9,6 @@ app_server <- function(input, output, session) {
   history <- shiny::reactiveVal(.create_history())
 
   shiny::observe({
-    session$setCurrentTheme(
-      if (isTRUE(input$dark_mode)) bslib::bs_theme(bootswatch = 'darkly') else bslib::bs_theme(bootswatch = 'flatly')
-    )
-  }) |>
-    shiny::bindEvent(input$dark_mode)
-
-  shiny::observe({
     .reset_game(word, history)
   }) |>
     shiny::bindEvent(input$new_game, ignoreNULL = TRUE, ignoreInit = TRUE)
@@ -28,6 +21,26 @@ app_server <- function(input, output, session) {
     .reset_game(word, history)
   }) |>
     shiny::bindEvent(input$give_up, ignoreNULL = TRUE)
+
+  shiny::observe({
+    shinyWidgets::show_alert(
+      title = 'Credits',
+      text = htmltools::HTML(
+        'This was R Shiny application was written by and is hosted by <a href="https://guslipkin.me">Gus Lipkin</a>.',
+        '<br>',
+        'The word list comes from <a href="http://wordlist.aspell.net/">SCOWL</a>.'
+      ),
+      html = TRUE
+    )
+  }) |>
+    shiny::bindEvent(input$credits)
+
+  shiny::observe({
+    session$setCurrentTheme(
+      if (isTRUE(input$dark_mode)) bslib::bs_theme(bootswatch = 'darkly') else bslib::bs_theme(bootswatch = 'flatly')
+    )
+  }) |>
+    shiny::bindEvent(input$dark_mode)
 
   shiny::observe({
     if (input$congratulations) .reset_game(word, history)
