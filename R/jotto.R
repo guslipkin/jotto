@@ -16,12 +16,14 @@
   usethis::use_data(word_list, internal = TRUE, overwrite = TRUE)
 }
 
+.check_word_dictionary <- function(word) { word %in% word_list }
+
 .check_word_length <- function(word) { nchar(word) == 5 }
 
 .check_word_duplicate_chars <- function(word) { !grepl('.*?(\\w+).*\\1', word) }
 
 .check_word <- function(word) {
-  .check_word_length(word) & .check_word_duplicate_chars(word)
+  .check_word_length(word) & .check_word_duplicate_chars(word) & .check_word_dictionary(word)
 }
 
 .pick_word <- function() {
