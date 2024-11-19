@@ -13,6 +13,12 @@
     ) |>
     dplyr::filter(nchar(.data$words) == 5) |>
     dplyr::filter(.check_word_duplicate_chars(.data$words)) |>
+    dplyr::pull(.data$words) |>
+    purrr::map(\(x) {
+      tibble::tibble('words' = x, 'valid' = .check_word_dictionary(x))
+    }, .progress = TRUE) |>
+    purrr::list_rbind() |>
+    dplyr::filter(.data$valid) |>
     dplyr::pull(.data$words)
   usethis::use_data(word_list, internal = TRUE, overwrite = TRUE)
 }
@@ -29,7 +35,7 @@
 .check_word_duplicate_chars <- function(word) { !grepl('.*?(\\w+).*\\1', word) }
 
 .check_word <- function(word) {
-  .check_word_dictionary(word) & .check_word_length(word) & .check_word_duplicate_chars(word)
+  .check_word_length(word) & .check_word_duplicate_chars(word)
 }
 
 .pick_word <- function() {
