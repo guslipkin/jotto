@@ -7,6 +7,14 @@
 app_server <- function(input, output, session) {
   word <- shiny::reactiveVal(.pick_word())
   history <- shiny::reactiveVal(.create_history())
+
+  shiny::observe({
+    session$setCurrentTheme(
+      if (isTRUE(input$dark_mode)) bslib::bs_theme(bootswatch = 'darkly') else bslib::bs_theme(bootswatch = 'flatly')
+    )
+  }) |>
+    shiny::bindEvent(input$dark_mode)
+
   shiny::observe({
     .reset_game(word, history)
   }) |>
