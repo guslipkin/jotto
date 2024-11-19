@@ -11,13 +11,13 @@ app_ui <- function(request) {
     # Your application UI logic
     bslib::page_sidebar(
       title = 'Jotto',
-      theme = bslib::bs_theme(bootswatch = 'flatly'),
+      theme = bslib::bs_theme(bootswatch = 'darkly'),
       sidebar = bslib::sidebar(
         open = FALSE,
         shiny::actionButton('new_game', label = 'New Game'),
         shiny::actionButton('give_up', label = 'Give Up'),
         shiny::actionButton('help', label = 'Help'),
-        shiny::checkboxInput('dark_mode', 'Dark Mode')
+        shinyWidgets::materialSwitch('dark_mode', label = 'Dark Mode', value = TRUE)
       ),
       bslib::layout_columns(
         col_widths = c(3, 9),
