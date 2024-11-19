@@ -1,0 +1,8 @@
+services:
+  jotto:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "31245:80"
+    restart: unless-stopped
