@@ -58,19 +58,21 @@ app_server <- function(input, output, session) {
     shinyWidgets::show_alert(
       title = 'Help',
       text = htmltools::HTML(paste(
+        '<div style="text-align: left;">',
         'Jotto is a game where you try to guess the five letter word.',
         '<ul>',
         '<li>The word will have no repeating letters</li>',
         '<li>The word is not a proper noun</li>',
         '<li>You are only told how many letters your guess has in common with the word</li>',
-        '<li>The difficulty is described below by the dictionary\'s author:',
+        '<li>The difficulty is described below by the dictionary\'s author. Each difficulty setting includes the words in the levels before it (ie, hard also contains the easy and medium words).',
         '<blockquote cite="http://wordlist.aspell.net/scowl-readme/">Size 35 is the recommended small size, 50 the medium and 70 the large. Sizes 70 and below contain words found in most dictionaries while the 80 size contains all the strange and unusual words people like to use in word games such as Scrabble (TM).  While a lot of the words in the 80 size are not used very often, they are all generally considered valid words in the English language.  The 95 contains just about every English word in existence and then some.  Many of the words at the 95 level will probably not be considered valid English words by most people.</blockquote>',
         'In this case, small is equivalent to the "Easy" setting and large equivalent to "Hard".</li>',
-        '</ul>',
+        '</ul></div>',
         sep = ''
       )),
       html = TRUE,
-      type = 'info'
+      type = 'info',
+      width = '80%'
     )
   }) |>
     shiny::bindEvent(input$help, ignoreNULL = TRUE)
