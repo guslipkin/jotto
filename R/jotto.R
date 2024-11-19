@@ -1,33 +1,19 @@
 .make_word_list <- function() {
+  # download the word list from http://wordlist.aspell.net/
+  # unzip to the jotto/scowl
   word_list <-
-    readr::read_csv(
-      'https://www.mit.edu/~ecprice/wordlist.10000',
-      col_names = 'words'
-    ) |>
-    dplyr::inner_join(
-      y = readr::read_csv(
-        'https://raw.githubusercontent.com/dwyl/english-words/refs/heads/master/words_alpha.txt',
-        col_names = 'words'
-      ),
-      by = 'words'
-    ) |>
-    dplyr::filter(nchar(.data$words) == 5) |>
-    dplyr::filter(.check_word_duplicate_chars(.data$words)) |>
-    dplyr::pull(.data$words) |>
-    purrr::map(\(x) {
-      tibble::tibble('words' = x, 'valid' = .check_word_dictionary(x))
+    'scowl/final' |>
+    list.files(pattern = 'words', full.names = TRUE) |>
+    purrr::map(\(f) {
+      f <- f |> readLines() |> iconv(to = 'UTF-8') |> tolower()
+      f <- f[nchar(f) == 5]
+      f <- f[grepl('\\w{5}', f)]
+      f <- f[.check_word_duplicate_chars(f)]
+      return(f)
     }, .progress = TRUE) |>
-    purrr::list_rbind() |>
-    dplyr::filter(.data$valid) |>
-    dplyr::pull(.data$words)
+    unlist() |>
+    sort()
   usethis::use_data(word_list, internal = TRUE, overwrite = TRUE)
-}
-
-.check_word_dictionary <- function(word) {
-  tryCatch(
-    { dictionaRy::define(word); return(TRUE); },
-    warning = \(w) return(FALSE)
-  )
 }
 
 .check_word_length <- function(word) { nchar(word) == 5 }
