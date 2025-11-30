@@ -59,6 +59,11 @@ app_ui <- function(request) {
         bslib::card(
           shiny::tableOutput('history')
         )
+      ),
+      htmltools::tags$footer(
+        id = 'healthcheck',
+        "Jotto is alive and well",
+        style = "display:none; position:fixed; bottom:0; width:100%;"
       )
     )
   )
@@ -104,6 +109,6 @@ golem_add_external_resources <- function() {
         }
       });
     '),
-    shinyjs::useShinyjs(),
+    shinyjs::useShinyjs()
   )
 }
